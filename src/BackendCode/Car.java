@@ -1,22 +1,33 @@
 package BackendCode;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Represents a car with attributes and related operations.
+ *
+ * @author @AbdullahShahid01
  */
 public class Car implements Serializable {
+
     private int ID;
-    private String Maker, Name, Colour, Type, Model, Condition, RegNo;
-    private int SeatingCapacity, RentPerHour;
+    private String Maker, Name, Colour, Type;
+    int SeatingCapacity;
+    String Model, Condition, RegNo;
+    private int RentPerHour;
     private CarOwner carOwner;
 
-    public Car() {}
+    public Car() {
+    }
 
-    public Car(int ID, String Maker, String Name, String Colour, String Type, 
-               int SeatingCapacity, String Model, String Condition, 
-               String RegNo, int RentPerHour, CarOwner carOwner) {
+    public Car(int ID, String Maker, String Name, String Colour, String Type, int SeatingCapacity, String Model, String Condition, String RegNo, int RentPerHour, CarOwner carOwner) {
         this.ID = ID;
         this.Maker = Maker;
         this.Name = Name;
@@ -29,6 +40,7 @@ public class Car implements Serializable {
         this.RentPerHour = RentPerHour;
         this.carOwner = carOwner;
     }
+
     public int getID() {
         return ID;
     }
@@ -119,89 +131,222 @@ public class Car implements Serializable {
 
     @Override
     public String toString() {
-        return "Car{" +
-                "ID=" + ID +
-                ", Maker='" + Maker + '\'' +
-                ", Name='" + Name + '\'' +
-                ", Colour='" + Colour + '\'' +
-                ", Type='" + Type + '\'' +
-                ", Model='" + Model + '\'' +
-                ", Condition='" + Condition + '\'' +
-                ", RegNo='" + RegNo + '\'' +
-                ", RentPerHour=" + RentPerHour +
-                ", CarOwner=" + carOwner + '}';
+        return "Car_new{" + "ID=" + ID + ", Maker=" + Maker + ", Name=" + Name + ", Colour=" + Colour + ", \nType=" + Type + ", SeatingCapacity=" + SeatingCapacity + ", Model=" + Model + ", Condition=" + Condition + ", RegNo=" + RegNo + ", RentPerHour=" + RentPerHour + ", \ncarOwner=" + carOwner.toString() + '}' + "\n";
     }
 
-    public void add() {
-        ArrayList<Car> cars = Car.view();
-        this.ID = cars.isEmpty() ? 1 : cars.get(cars.size() - 1).getID() + 1;
-        cars.add(this);
-        saveToFile(cars, "Car.ser");
+    public void Add() {
+        ArrayList<Car> car = Car.View();
+        if (car.isEmpty()) {
+            this.ID = 1;
+        } else {
+            this.ID = car.get(car.size() - 1).ID + 1; // Auto ID...
+        }
+        car.add(this);
+        File file = new File("Car.ser");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+        }
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            for (int i = 0; i < car.size(); i++) {
+                outputStream.writeObject(car.get(i));
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
     }
 
-    public void update() {
-        ArrayList<Car> cars = Car.view();
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getID() == this.ID) {
-                cars.set(i, this);
+    /**
+     * aik new Object bna k us se Update() ka method call krte hein aur us new
+     * object mein jo Car ID hai agar usi ID ki koi car pehle mojood ha tou us
+     * se replace ho jay gi
+     */
+    public void Update() {
+        ArrayList<Car> car = Car.View();
+
+        // for loop for replacing the new Car object with old one with same ID
+        for (int i = 0; i < car.size(); i++) {
+            if (car.get(i).ID == ID) {
+                car.set(i, this);
+            }
+        }
+
+        // code for writing new Car record 
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"));
+            for (int i = 0; i < car.size(); i++) {
+                outputStream.writeObject(car.get(i));
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+    }
+
+    public void Remove() {
+
+        ArrayList<Car> car = Car.View();
+        // for loop for deleting the required Car
+        for (int i = 0; i < car.size(); i++) {
+            if ((car.get(i).ID == ID)) {
+                car.remove(i);
+            }
+        }
+        // code for writing new Car record 
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"));
+            for (int i = 0; i < car.size(); i++) {
+                outputStream.writeObject(car.get(i));
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Car> SearchByName(String name) {
+        ArrayList<Car> car = Car.View();
+        ArrayList<Car> s = new ArrayList<>();
+        for (int i = 0; i < car.size(); i++) {
+            if (car.get(i).Name.equalsIgnoreCase(name)) {
+                s.add(car.get(i));
+            }
+        }
+        return s;
+    }
+
+    public static Car SearchByID(int id) {
+        ArrayList<Car> car = Car.View();
+        for (int i = 0; i < car.size(); i++) {
+            if (car.get(i).ID == id) {
+                return car.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static Car SearchByRegNo(String regNo) {
+        ArrayList<Car> car = Car.View();
+        for (int i = 0; i < car.size(); i++) {
+            if (car.get(i).RegNo.equalsIgnoreCase(regNo)) {
+                return car.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<Car> View() {
+        ArrayList<Car> carList = new ArrayList<>(0);
+        ObjectInputStream inputStream = null;
+        try {
+// open file for reading
+            inputStream = new ObjectInputStream(new FileInputStream("Car.ser"));
+            boolean EOF = false;
+// Keep reading file until file ends
+            while (!EOF) {
+                try {
+                    Car myObj = (Car) inputStream.readObject();
+                    carList.add(myObj);
+                } catch (ClassNotFoundException e) {
+                    System.out.println(e);
+                } catch (EOFException end) {
+                    EOF = true;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        return carList;
+    }
+
+    public static boolean isNameValid(String Name) {
+        boolean flag = false;
+        for (int i = 0; i < Name.length(); i++) {
+//            Name can contain white spaces
+            if (Character.isLetter(Name.charAt(i)) |Character.isDigit(Name.charAt(i))| Name.charAt(i) == ' ') {
+                flag = true;
+            } else {
+                flag = false;
                 break;
             }
         }
-        saveToFile(cars, "Car.ser");
+        return flag;
     }
 
-    public void remove() {
-        ArrayList<Car> cars = Car.view();
-        cars.removeIf(c -> c.getID() == this.ID);
-        saveToFile(cars, "Car.ser");
-    }
-
-    public static ArrayList<Car> view() {
-        return readFromFile("Car.ser");
-    }
-
-    public static Car searchByID(int id) {
-        return view().stream().filter(car -> car.getID() == id).findFirst().orElse(null);
-    }
-
-    public static ArrayList<Car> searchByName(String name) {
-        ArrayList<Car> result = new ArrayList<>();
-        for (Car car : view()) {
-            if (car.getName().equalsIgnoreCase(name)) {
-                result.add(car);
-            }
-        }
-        return result;
-    }
-
-    public static Car searchByRegNo(String regNo) {
-        return view().stream().filter(car -> car.getRegNo().equalsIgnoreCase(regNo)).findFirst().orElse(null);
-    }
-
-    private static ArrayList<Car> readFromFile(String fileName) {
-        ArrayList<Car> cars = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            while (true) {
-                try {
-                    cars.add((Car) ois.readObject());
-                } catch (EOFException e) {
-                    break;
+    public static boolean isRegNoValid(String RegNo) {
+        // reg no must contain letters followed by digits, both separated by '-' dash
+        // EXAMPLE: ASD-2343
+        String[] token = RegNo.split("-");
+        if (token.length == 2) {
+            for (int i = 0; i < token[0].length(); i++) {
+                if (!Character.isLetter(token[0].charAt(i))) {
+                    return false;
                 }
             }
-        } catch (FileNotFoundException ignored) {
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            for (int i = 0; i < token[1].length(); i++) {
+                if (!Character.isDigit(token[1].charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return cars;
     }
 
-    private static void saveToFile(ArrayList<Car> cars, String fileName) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            for (Car car : cars) {
-                oos.writeObject(car);
+    public boolean isRented() {
+        ArrayList<Car> BookedCars = Booking.getBookedCars();
+        for (int i = 0; i < BookedCars.size(); i++) {
+            if (BookedCars.get(i).ID == this.ID) {
+                return true;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return false;
     }
+
 }
