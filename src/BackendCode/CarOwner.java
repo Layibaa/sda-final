@@ -36,9 +36,19 @@ public class CarOwner extends Person implements Serializable {
     public String toString() {
         return super.toString() + " CarOwner{" + "Balance=" + Balance + '}' + "\n";
     }
-
-    @Override
-    public void Add() {
+ 
+   
+    public ArrayList<Car> getAllCars() {
+        ArrayList<Car> cars = Car.View();
+        ArrayList<Car> car1 = new ArrayList<>();
+        for (int i = 0; i < cars.size(); i++) {
+            if (cars.get(i).getCarOwner().ID == ID) {
+                car1.add(cars.get(i));
+            }
+        }
+        return car1;
+    }
+ public void Add() {
         ArrayList<CarOwner> carOwner = CarOwner.View();
         if (carOwner.isEmpty()) {
             this.ID = 1;
@@ -74,8 +84,7 @@ public class CarOwner extends Person implements Serializable {
             }
         }
     }
-
-    @Override
+ 
     public void Update() {
         ArrayList<CarOwner> carOwner = CarOwner.View();
 
@@ -106,9 +115,8 @@ public class CarOwner extends Person implements Serializable {
                 }
             }
         }
-    }
-
-    @Override
+    } 
+    
     public void Remove() {
 
         ArrayList<CarOwner> carOwner = CarOwner.View();
@@ -138,51 +146,7 @@ public class CarOwner extends Person implements Serializable {
                 }
             }
         }
-    }
-
-    public static ArrayList<CarOwner> SearchByName(String name) {
-        ArrayList<CarOwner> carOwner = CarOwner.View();
-        ArrayList<CarOwner> s = new ArrayList<>();
-
-        for (int i = 0; i < carOwner.size(); i++) {
-            if (carOwner.get(i).Name.equalsIgnoreCase(name)) {
-                s.add(carOwner.get(i));
-            }
-        }
-        return s;
-    }
-
-    public static CarOwner SearchByCNIC(String carOwnerCNIC) {
-        ArrayList<CarOwner> carOwner = CarOwner.View();
-        for (int i = 0; i < carOwner.size(); i++) {
-            if (carOwner.get(i).CNIC.equalsIgnoreCase(carOwnerCNIC)) {
-                return carOwner.get(i);
-            }
-        }
-        return null;
-    }
-
-    public static CarOwner SearchByID(int id) {
-        ArrayList<CarOwner> carOwner = CarOwner.View();
-        for (int i = 0; i < carOwner.size(); i++) {
-            if (carOwner.get(i).ID == id) {
-                return carOwner.get(i);
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<Car> getAllCars() {
-        ArrayList<Car> cars = Car.View();
-        ArrayList<Car> car1 = new ArrayList<>();
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getCarOwner().ID == ID) {
-                car1.add(cars.get(i));
-            }
-        }
-        return car1;
-    }
-
+    }   
     public static ArrayList<CarOwner> View() {
         ArrayList<CarOwner> carOwnerList = new ArrayList<>(0);
         ObjectInputStream inputStream = null;

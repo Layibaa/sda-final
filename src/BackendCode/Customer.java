@@ -40,9 +40,7 @@ public class Customer extends Person implements Serializable {
     public String toString() {
         return super.toString() + "Customer{" + "Bill=" + Bill + '}' + "\n";
     }
-
-    @Override
-    public void Add() {
+ public void Add() {
         ArrayList<Customer> customers = Customer.View();
         if (customers.isEmpty()) {
             this.ID = 1;
@@ -78,8 +76,7 @@ public class Customer extends Person implements Serializable {
             }
         }
     }
-
-    @Override
+ 
     public void Update() {
         ArrayList<Customer> customers = Customer.View();
 
@@ -111,9 +108,7 @@ public class Customer extends Person implements Serializable {
             }
         }
     }
-
-    ////////////////////////
-    @Override
+ 
     public void Remove() {
 
         ArrayList<Customer> customers = Customer.View();
@@ -147,37 +142,6 @@ public class Customer extends Person implements Serializable {
         }
     }
 
-    public static ArrayList<Customer> SearchByName(String name) {
-        ArrayList<Customer> customers = Customer.View();
-        ArrayList<Customer> s = new ArrayList<>();
-
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).Name.equalsIgnoreCase(name)) {
-                s.add(customers.get(i));
-            }
-        }
-        return s;
-    }
-
-    public static Customer SearchByCNIC(String CustomerCNIC) {
-        ArrayList<Customer> customers = Customer.View();
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).CNIC.equalsIgnoreCase(CustomerCNIC)) {
-                return customers.get(i);
-            }
-        }
-        return null;
-    }
-
-    public static Customer SearchByID(int id) {
-        ArrayList<Customer> customers = Customer.View();
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).ID == id) {
-                return customers.get(i);
-            }
-        }
-        return null;
-    }
 
     public static ArrayList<Customer> View() {
         ArrayList<Customer> CustomerList = new ArrayList<>(0);
@@ -212,5 +176,7 @@ public class Customer extends Person implements Serializable {
         }
         return CustomerList;
     }
+
+
 
 }

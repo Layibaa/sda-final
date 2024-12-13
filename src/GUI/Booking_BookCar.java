@@ -1,8 +1,10 @@
 package GUI;
 
-import BackendCode.Booking;
+import BackendCode.Booking; 
 import BackendCode.Car;
+import BackendCode.CarSearcher;
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
@@ -82,7 +84,7 @@ public class Booking_BookCar extends JFrame {
                     try {
                         if (Integer.parseInt(CarID) > 0) {
                             CarIDValidity_Label.setText("");
-                            car = Car.SearchByID(Integer.parseInt(CarID));
+                            car = CarSearcher.SearchByID(Integer.parseInt(CarID));
                             if (car != null) {
                                 if (!car.isRented()) {
                                     CarIDValidity_Label.setText("");
@@ -112,7 +114,7 @@ public class Booking_BookCar extends JFrame {
                     try {
                         if (Integer.parseInt(customerID) > 0) {
                             CustomerIDValidity_Label.setText("");
-                            customer = Customer.SearchByID(Integer.parseInt(customerID));
+                            customer = CustomerSearcher.SearchByID(Integer.parseInt(customerID));
                             if (customer != null) {
                                 CustomerIDValidity_Label.setText("");
                             } else {

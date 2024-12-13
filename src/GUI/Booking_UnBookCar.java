@@ -1,8 +1,10 @@
 package GUI;
 
-import BackendCode.Booking;
+import BackendCode.Booking; 
+import BackendCode.BookingSearcher;
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarSearcher;
 import BackendCode.Customer;
 import java.awt.*;
 import java.awt.event.*;
@@ -68,7 +70,7 @@ public class Booking_UnBookCar extends JFrame {
                     try {
                         if (Integer.parseInt(carID) > 0) {
                             CarIDValidity_Label.setText("");
-                            car = Car.SearchByID(Integer.parseInt(carID));
+                            car = CarSearcher.SearchByID(Integer.parseInt(carID));
                             if (car != null) {
                                 if (car.isRented()) {
                                     CarIDValidity_Label.setText("");
@@ -102,7 +104,7 @@ public class Booking_UnBookCar extends JFrame {
                             + "\n Are you sure you want to continue ??", "UnBook Confirmation", OK_CANCEL_OPTION);
                     if (showConfirmDialog == 0) {
 
-                        ArrayList<Booking> booking = Booking.SearchByCarID(Integer.parseInt(carID));
+                        ArrayList<Booking> booking = BookingSearcher.SearchByCarID(Integer.parseInt(carID));
                         Booking last = booking.get((booking.size() - 1));
                         last.setReturnTime(System.currentTimeMillis());
                         last.Update();

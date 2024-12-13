@@ -3,6 +3,7 @@ package GUI;
 import BackendCode.Booking;
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarSearcher;
 import java.awt.Dimension;
 import javax.swing.table.DefaultTableModel;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
@@ -171,7 +172,7 @@ public class Car_Details {
                     String regNo = SearchRegNo_TextField.getText().trim();
                     if (!regNo.isEmpty()) {
                         if (Car.isRegNoValid(regNo)) {
-                            Car car = Car.SearchByRegNo(regNo);
+                            Car car = CarSearcher.SearchByRegNo(regNo);
                             if (car != null) {
                                 JOptionPane.showMessageDialog(null, car.toString());
                                 SearchRegNo_TextField.setText("");
@@ -192,7 +193,7 @@ public class Car_Details {
                     if (!name.isEmpty()) {
                         if (Car.isNameValid(name)) {
 
-                            ArrayList<Car> car = Car.SearchByName(name);
+                            ArrayList<Car> car = CarSearcher.SearchByName(name);
 
                             if (!car.isEmpty()) {
                                 JOptionPane.showMessageDialog(null, car.toString());

@@ -1,6 +1,7 @@
 package GUI;
 
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -56,7 +57,7 @@ public class Customer_Update {
                 if (!ID_TextField.getText().isEmpty()) {
                     if (Customer.isIDvalid(ID)) {
                         CO.setID(Integer.parseInt(ID));
-                        customer = Customer.SearchByID(Integer.parseInt(ID)); // the ID of this object is used in UpdateManage_GUI_B class. that is why it is kept static
+                        customer = CustomerSearcher.SearchByID(Integer.parseInt(ID)); // the ID of this object is used in UpdateManage_GUI_B class. that is why it is kept static
                         if (customer != null) {
                             Parent_JFrame.getMainFrame().setEnabled(false);
                             frame.dispose();
@@ -146,7 +147,7 @@ public class Customer_Update {
                         System.out.println("cnic is not empty");
                         if (Customer.isCNICValid(cnic)) {
                             System.out.println("CNIC is valid");
-                            Customer CO = Customer.SearchByCNIC(cnic);
+                            Customer CO = CustomerSearcher.SearchByCNIC(cnic);
                             if (CO != null) {
                                 if (cnic.equals(customer.getCNIC())) {
                                     System.out.println("no change in cnic");

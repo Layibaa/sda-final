@@ -2,6 +2,7 @@ package GUI;
 
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class CarOwner_Remove {
                 case "Remove": {
                     String id = ID_TextField.getText().trim();
                     if (CarOwner.isIDvalid(id)) {
-                        CarOwner carOwner = CarOwner.SearchByID(Integer.parseInt(id));
+                        CarOwner carOwner = CarOwnerSearcher.SearchByID(Integer.parseInt(id));
                         if (carOwner != null) {
                             int showConfirmDialog = JOptionPane.showConfirmDialog(frame, "You are about to remove the following Car Owner.\n"+carOwner.toString()+"\nAll the data including Cars and Balance for this car owner will also be deleted  !"
                                     + "\n Are you sure you want to continue ??", "Remove Car Owner", JOptionPane.OK_CANCEL_OPTION);

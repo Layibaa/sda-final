@@ -2,6 +2,8 @@ package GUI;
 
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
+import BackendCode.CarSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
@@ -237,9 +239,9 @@ public class Car_Add extends JFrame {
 //Car(id, maker, name, color, Type, seatingCapacity, model, condition, regNo, rentPerHour, carOwner);
                 try {
                     if (maker != null && name != null && regNo != null && ownerID != null && rentPerHour != null) {
-                        CarOwner carOwner = CarOwner.SearchByID(Integer.parseInt(ownerID));
+                        CarOwner carOwner = CarOwnerSearcher.SearchByID(Integer.parseInt(ownerID));
 
-                        Car car = Car.SearchByRegNo(regNo);
+                        Car car = CarSearcher.SearchByRegNo(regNo);
 
                         if (carOwner != null) {
                             if (car == null) {

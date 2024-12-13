@@ -1,7 +1,9 @@
 package GUI;
 
 import BackendCode.Booking;
+import BackendCode.BookingSearcher;
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -67,7 +69,7 @@ public class Customer_Details implements ActionListener {
             int Bill = Customer_objects.get(i).getBill();
 
             // getting booked cars for customer
-            ArrayList<Booking> bookings = Booking.SearchByCustomerID(ID);
+            ArrayList<Booking> bookings = BookingSearcher.SearchByCustomerID(ID);
             String bookedCars = "";
             if (!bookings.isEmpty()) {
                 for (int j = 0; j < bookings.size(); j++) {
@@ -148,7 +150,7 @@ public class Customer_Details implements ActionListener {
                 String id = SearchID_TextField.getText().trim();
                 if (!id.isEmpty()) {
                     if (Customer.isIDvalid(id)) {
-                        Customer co = Customer.SearchByID(Integer.parseInt(id));
+                        Customer co = CustomerSearcher.SearchByID(Integer.parseInt(id));
                         if (co != null) {
                             JOptionPane.showMessageDialog(null, co.toString());
                             SearchID_TextField.setText("");
@@ -168,7 +170,7 @@ public class Customer_Details implements ActionListener {
                 String name = SearchName_TextField.getText().trim();
                 if (!name.isEmpty()) {
                     if (Customer.isNameValid(name)) {
-                        ArrayList<Customer> customerArrayList = Customer.SearchByName(name);
+                        ArrayList<Customer> customerArrayList = CustomerSearcher.SearchByName(name);
                         String record = "";
                         for (int i = 0; i < customerArrayList.size(); i++) {
                             record += customerArrayList.get(i).toString() + "\n";
@@ -236,7 +238,7 @@ public class Customer_Details implements ActionListener {
                     System.out.println(showInputDialog);
 
                     if (showInputDialog != null) {
-                        Customer customer = Customer.SearchByID((Integer.parseInt(showInputDialog + "")));
+                        Customer customer = CustomerSearcher.SearchByID((Integer.parseInt(showInputDialog + "")));
 
                         int showConfirmDialog = JOptionPane.showConfirmDialog(null, "You are about to clear the balance for the following Customer\n"
                                 + customer + "\nAre you sure you want to continue ?", "Clear Bill Confirmation",

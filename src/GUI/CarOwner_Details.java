@@ -2,6 +2,7 @@ package GUI;
 
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -139,7 +140,7 @@ public class CarOwner_Details implements ActionListener {
                 String id = SearchID_TextField.getText().trim();
                 if (!id.isEmpty()) {
                     if (CarOwner.isIDvalid(id)) {
-                        CarOwner co = CarOwner.SearchByID(Integer.parseInt(id));
+                        CarOwner co = CarOwnerSearcher.SearchByID(Integer.parseInt(id));
                         if (co != null) {
                             JOptionPane.showMessageDialog(null, co.toString());
                             SearchID_TextField.setText("");
@@ -159,7 +160,7 @@ public class CarOwner_Details implements ActionListener {
                 String name = SearchName_TextField.getText().trim();
                 if (!name.isEmpty()) {
                     if (CarOwner.isNameValid(name)) {
-                        ArrayList<CarOwner> carOwnerArrayList = CarOwner.SearchByName(name);
+                        ArrayList<CarOwner> carOwnerArrayList = CarOwnerSearcher.SearchByName(name);
                         String record = "";
 
                         if (!carOwnerArrayList.isEmpty()) {
@@ -214,7 +215,7 @@ public class CarOwner_Details implements ActionListener {
                     System.out.println(showInputDialog);
 
                     if (showInputDialog != null) {
-                        CarOwner carOwner = CarOwner.SearchByID(Integer.parseInt(showInputDialog + ""));
+                        CarOwner carOwner = CarOwnerSearcher.SearchByID(Integer.parseInt(showInputDialog + ""));
 
                         int showConfirmDialog = JOptionPane.showConfirmDialog(null, "You are about to clear the balance for the following Car Owner\n"
                                 + carOwner + "\nAre you sure you want to continue ?", "Clear Balance Confirmation",

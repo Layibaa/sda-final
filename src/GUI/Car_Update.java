@@ -2,6 +2,8 @@ package GUI;
 
 import BackendCode.Car;
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
+import BackendCode.CarSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
@@ -82,7 +84,7 @@ public class Car_Update extends JFrame {
                 }
 
                 if (carID != null) {
-                    car = Car.SearchByID(Integer.parseInt(carID));
+                    car = CarSearcher.SearchByID(Integer.parseInt(carID));
                     if (car != null) {
                         Car_UpdateInner cui = new Car_UpdateInner();
                         cui.setVisible(true);
@@ -285,7 +287,7 @@ public class Car_Update extends JFrame {
                     if (!RegNo.isEmpty()) {
                         if (Car.isRegNoValid(RegNo)) {
                             RegNoValidity_Label.setText("");
-                            Car car2 = Car.SearchByRegNo(RegNo);
+                            Car car2 = CarSearcher.SearchByRegNo(RegNo);
                             // checking if the newly entered regNo is already registered or not
                             if ((car2 != null) & (!RegNo.equalsIgnoreCase(car.getRegNo()))) {
                                 RegNo = null;
@@ -303,7 +305,7 @@ public class Car_Update extends JFrame {
                         try {
                             if (Integer.parseInt(OwnerID) > 0) {
                                 OwnerIDValidity_Label.setText("");
-                                carOwner = CarOwner.SearchByID(Integer.parseInt(OwnerID));
+                                carOwner = CarOwnerSearcher.SearchByID(Integer.parseInt(OwnerID));
                                 if (carOwner != null) {
                                     // if owner id is valid and owner exists 
                                     OwnerIDValidity_Label.setText("");

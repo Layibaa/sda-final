@@ -2,6 +2,7 @@ package GUI;
 
 import BackendCode.Booking;
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class Customer_Remove {
                 case "Remove": {
                     String id = ID_TextField.getText().trim();
                     if (Customer.isIDvalid(id)) {
-                        Customer customer = Customer.SearchByID(Integer.parseInt(id));
+                        Customer customer = CustomerSearcher.SearchByID(Integer.parseInt(id));
                         if (customer != null) {
                             int showConfirmDialog = JOptionPane.showConfirmDialog(frame, "You are about to remove the following Customer.\n"
                                     + customer.toString() + " \nAll the data including Booked Cars and Balance for this Customer will also be deleted  !"

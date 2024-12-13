@@ -134,140 +134,69 @@ public class Car implements Serializable {
         return "Car_new{" + "ID=" + ID + ", Maker=" + Maker + ", Name=" + Name + ", Colour=" + Colour + ", \nType=" + Type + ", SeatingCapacity=" + SeatingCapacity + ", Model=" + Model + ", Condition=" + Condition + ", RegNo=" + RegNo + ", RentPerHour=" + RentPerHour + ", \ncarOwner=" + carOwner.toString() + '}' + "\n";
     }
 
-    public void Add() {
-        ArrayList<Car> car = Car.View();
-        if (car.isEmpty()) {
-            this.ID = 1;
+    
+     public void Add() {
+        ArrayList<Car> carList = Car.View();
+        if (carList.isEmpty()) {
+            this.setID(1);
         } else {
-            this.ID = car.get(car.size() - 1).ID + 1; // Auto ID...
+            this.setID(carList.get(carList.size() - 1).getID() + 1); // Auto ID
         }
-        car.add(this);
+        carList.add(this);
+
         File file = new File("Car.ser");
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException ex) {
-                System.out.println(ex);
+                System.out.println("Error creating file: " + ex.getMessage());
             }
         }
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            for (int i = 0; i < car.size(); i++) {
-                outputStream.writeObject(car.get(i));
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            for (Car car : carList) {
+                outputStream.writeObject(car);
             }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
         } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
+            System.out.println("Error writing to file: " + ex.getMessage());
         }
     }
 
-    /**
-     * aik new Object bna k us se Update() ka method call krte hein aur us new
-     * object mein jo Car ID hai agar usi ID ki koi car pehle mojood ha tou us
-     * se replace ho jay gi
-     */
     public void Update() {
-        ArrayList<Car> car = Car.View();
+        ArrayList<Car> carList = Car.View();
 
-        // for loop for replacing the new Car object with old one with same ID
-        for (int i = 0; i < car.size(); i++) {
-            if (car.get(i).ID == ID) {
-                car.set(i, this);
+        // Replace the existing car object with the same ID
+        for (int i = 0; i < carList.size(); i++) {
+            if (carList.get(i).getID() == this.getID()) {
+                carList.set(i, this);
+                break;
             }
         }
 
-        // code for writing new Car record 
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"));
-            for (int i = 0; i < car.size(); i++) {
-                outputStream.writeObject(car.get(i));
+        // Write updated list back to the file
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"))) {
+            for (Car car : carList) {
+                outputStream.writeObject(car);
             }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
         } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
+            System.out.println("Error writing to file: " + ex.getMessage());
         }
     }
 
     public void Remove() {
+        ArrayList<Car> carList = Car.View();
 
-        ArrayList<Car> car = Car.View();
-        // for loop for deleting the required Car
-        for (int i = 0; i < car.size(); i++) {
-            if ((car.get(i).ID == ID)) {
-                car.remove(i);
+        // Remove car with the same ID
+        carList.removeIf(car -> car.getID() == this.getID());
+
+        // Write updated list back to the file
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"))) {
+            for (Car car : carList) {
+                outputStream.writeObject(car);
             }
-        }
-        // code for writing new Car record 
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("Car.ser"));
-            for (int i = 0; i < car.size(); i++) {
-                outputStream.writeObject(car.get(i));
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
         } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
+            System.out.println("Error writing to file: " + ex.getMessage());
         }
-    }
-
-    public static ArrayList<Car> SearchByName(String name) {
-        ArrayList<Car> car = Car.View();
-        ArrayList<Car> s = new ArrayList<>();
-        for (int i = 0; i < car.size(); i++) {
-            if (car.get(i).Name.equalsIgnoreCase(name)) {
-                s.add(car.get(i));
-            }
-        }
-        return s;
-    }
-
-    public static Car SearchByID(int id) {
-        ArrayList<Car> car = Car.View();
-        for (int i = 0; i < car.size(); i++) {
-            if (car.get(i).ID == id) {
-                return car.get(i);
-            }
-        }
-        return null;
-    }
-
-    public static Car SearchByRegNo(String regNo) {
-        ArrayList<Car> car = Car.View();
-        for (int i = 0; i < car.size(); i++) {
-            if (car.get(i).RegNo.equalsIgnoreCase(regNo)) {
-                return car.get(i);
-            }
-        }
-        return null;
     }
 
     public static ArrayList<Car> View() {

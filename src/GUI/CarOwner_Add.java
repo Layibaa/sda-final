@@ -1,6 +1,7 @@
 package GUI;
 
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -109,7 +110,7 @@ public class CarOwner_Add {
                     String contact = Contact_TextField.getText().trim();
 
                     if (CarOwner.isCNICValid(cnic)) {
-                        CarOwner carOwner = CarOwner.SearchByCNIC(cnic);
+                        CarOwner carOwner = CarOwnerSearcher.SearchByCNIC(cnic);
                         if (carOwner == null) {
                             if (CarOwner.isNameValid(name)) {
                                 if (CarOwner.isContactNoValid(contact)) {

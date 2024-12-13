@@ -43,13 +43,14 @@ public abstract class Person implements Serializable {
     public void setContact_No(String Contact_No) {
         this.Contact_No = Contact_No;
     }
-    public abstract void Add();
-    public abstract void Update();
-    public abstract void Remove();
+    
     @Override
     public String toString() {
         return "Person_new{" + "ID=" + ID + ", CNIC=" + CNIC + ", Name=" + Name + ", Contact_No=" + Contact_No + '}';
     }
+       public abstract void Add();
+    public abstract void Update();
+    public abstract void Remove();
     /**
      * A valid CNIC consists of 13 characters, only digits.
      * @param cnic, The CNIC whose validity is to be checked

@@ -2,6 +2,7 @@ package GUI;
 
 import BackendCode.Car;
 import BackendCode.Car;
+import BackendCode.CarSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
@@ -67,7 +68,7 @@ public class Car_Remove extends JFrame {
                         if (Integer.parseInt(carID) > 0) {
                             CarIDValidity_Label.setText("");
 //                            if (carID != null) {
-                            Car car = Car.SearchByID(Integer.parseInt(carID));
+                            Car car = CarSearcher.SearchByID(Integer.parseInt(carID));
                             if (car != null) {
                                 int showConfirmDialog = JOptionPane.showConfirmDialog(null, "You are about to remove this car \n "
                                         + car.toString() + "\n Are you sure you want to continue ??", "Confirmation",

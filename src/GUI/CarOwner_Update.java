@@ -1,6 +1,7 @@
 package GUI;
 
 import BackendCode.CarOwner;
+import BackendCode.CarOwnerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -56,7 +57,7 @@ public class CarOwner_Update {
                 if (!ID_TextField.getText().isEmpty()) {
                     if (CarOwner.isIDvalid(ID)) {
                         CO.setID(Integer.parseInt(ID));
-                        carOwner = CarOwner.SearchByID(Integer.parseInt(ID)); // the ID of this object is used in UpdateManage_GUI_B class. that is why it is kept static
+                        carOwner = CarOwnerSearcher.SearchByID(Integer.parseInt(ID)); // the ID of this object is used in UpdateManage_GUI_B class. that is why it is kept static
                         if (carOwner != null) {
                             Parent_JFrame.getMainFrame().setEnabled(false);
                             frame.dispose();
@@ -146,7 +147,7 @@ public class CarOwner_Update {
                         System.out.println("cnic is not empty");
                         if (CarOwner.isCNICValid(cnic)) {
                             System.out.println("CNIC is valid");
-                            CarOwner CO = CarOwner.SearchByCNIC(cnic);
+                            CarOwner CO = CarOwnerSearcher.SearchByCNIC(cnic);
                             if (CO != null) {
                                 if (cnic.equals(carOwner.getCNIC())) {
                                     System.out.println("no change in cnic");

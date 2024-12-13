@@ -1,8 +1,11 @@
 package GUI;
 
 import BackendCode.Booking;
+import BackendCode.BookingSearcher;
 import BackendCode.Car;
+import BackendCode.CarSearcher;
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import java.awt.Dimension;
 import javax.swing.table.DefaultTableModel;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
@@ -190,9 +193,9 @@ public class Booking_Details {
                     String customerID = CustomerID_TextField.getText().trim();
                     if (!customerID.isEmpty()) {
                         if (Customer.isIDvalid(customerID)) {
-                            Customer customer = Customer.SearchByID(Integer.parseInt(customerID));
+                            Customer customer = CustomerSearcher.SearchByID(Integer.parseInt(customerID));
                             if (customer != null) {
-                                ArrayList<Booking> bookings = Booking.SearchByCustomerID(Integer.parseInt(customerID));
+                                ArrayList<Booking> bookings = BookingSearcher.SearchByCustomerID(Integer.parseInt(customerID));
                                 if (!bookings.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, bookings.toString());
                                 } else {
@@ -214,9 +217,9 @@ public class Booking_Details {
                     String carRegNo = CarRegNo_TextField.getText().trim();
                     if (!carRegNo.isEmpty()) {
                         if (Car.isRegNoValid(carRegNo)) {
-                            Car car = Car.SearchByRegNo(carRegNo);
+                            Car car = CarSearcher.SearchByRegNo(carRegNo);
                             if (car != null) {
-                                ArrayList<Booking> bookings = Booking.SearchByCarRegNo(carRegNo);
+                                ArrayList<Booking> bookings = BookingSearcher.SearchByCarRegNo(carRegNo);
                                 if (!bookings.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, bookings.toString());
                                 } else {

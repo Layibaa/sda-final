@@ -17,10 +17,11 @@ import java.util.ArrayList;
  */
 public class Booking implements Serializable {
 
-    private int ID;
-    private Customer customer;
-    private Car car;
-    private long RentTime, ReturnTime; // stores System time when the Book() method is called
+    int ID;
+    Customer customer;
+    Car car;
+    long RentTime;
+    long ReturnTime; // stores System time when the Book() method is called
 
     public Booking() {
     }
@@ -78,6 +79,42 @@ public class Booking implements Serializable {
         return "Booking{" + "ID=" + ID + ", \ncustomer=" + customer.toString() + ", \ncar=" + car.toString() + ", \nRentTime=" + RentTime + ", ReturnTime=" + ReturnTime + '}' + "\n";
     }
 
+    
+
+
+    public static ArrayList<Booking> View() {
+        ArrayList<Booking> bookingList = new ArrayList<>(0);
+        ObjectInputStream inputStream = null;
+        try {
+// open file for reading
+            inputStream = new ObjectInputStream(new FileInputStream("Booking.ser"));
+            boolean EOF = false;
+// Keep reading file until file ends
+            while (!EOF) {
+                try {
+                    Booking myObj = (Booking) inputStream.readObject();
+                    bookingList.add(myObj);
+                } catch (ClassNotFoundException e) {
+                    System.out.println(e);
+                } catch (EOFException end) {
+                    EOF = true;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        return bookingList;
+    }
     public void Add() {
         ArrayList<Booking> booking = Booking.View();
         if (booking.isEmpty()) {
@@ -196,148 +233,6 @@ public class Booking implements Serializable {
         } else {
             return rentPerHour;
         }
-    }
-
-    public static ArrayList<Booking> SearchByCustomerID(int CustomerID) {
-        ArrayList<Booking> bookingList = new ArrayList<>(0);
-        ObjectInputStream inputStream = null;
-        try {
-// open file for reading
-            inputStream = new ObjectInputStream(new FileInputStream("Booking.ser"));
-            boolean EOF = false;
-// Keep reading file until file ends
-            while (!EOF) {
-                try {
-                    Booking myObj = (Booking) inputStream.readObject();
-                    if (myObj.customer.getID() == CustomerID) {
-                        bookingList.add(myObj);
-                    }
-                } catch (ClassNotFoundException e) {
-                    System.out.println(e);
-                } catch (EOFException end) {
-                    EOF = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-        return bookingList;
-    }
-
-    public static ArrayList<Booking> SearchByCarRegNo(String CarRegNo) {
-        ArrayList<Booking> bookingList = new ArrayList<>(0);
-        ObjectInputStream inputStream = null;
-        try {
-// open file for reading
-            inputStream = new ObjectInputStream(new FileInputStream("Booking.ser"));
-            boolean EOF = false;
-// Keep reading file until file ends
-            while (!EOF) {
-                try {
-                    Booking myObj = (Booking) inputStream.readObject();
-                    if (myObj.car.getRegNo().equalsIgnoreCase(CarRegNo)) {
-                        bookingList.add(myObj);
-                    }
-                } catch (ClassNotFoundException e) {
-                    System.out.println(e);
-                } catch (EOFException end) {
-                    EOF = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-        return bookingList;
-    }
-
-    public static ArrayList<Booking> SearchByCarID(int carID) {
-        ArrayList<Booking> bookingList = new ArrayList<>(0);
-        ObjectInputStream inputStream = null;
-        try {
-// open file for reading
-            inputStream = new ObjectInputStream(new FileInputStream("Booking.ser"));
-            boolean EOF = false;
-// Keep reading file until file ends
-            while (!EOF) {
-                try {
-                    Booking myObj = (Booking) inputStream.readObject();
-                    if (myObj.car.getID() == carID) {
-                        bookingList.add(myObj);
-                    }
-                } catch (ClassNotFoundException e) {
-                    System.out.println(e);
-                } catch (EOFException end) {
-                    EOF = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-        return bookingList;
-    }
-
-    public static ArrayList<Booking> View() {
-        ArrayList<Booking> bookingList = new ArrayList<>(0);
-        ObjectInputStream inputStream = null;
-        try {
-// open file for reading
-            inputStream = new ObjectInputStream(new FileInputStream("Booking.ser"));
-            boolean EOF = false;
-// Keep reading file until file ends
-            while (!EOF) {
-                try {
-                    Booking myObj = (Booking) inputStream.readObject();
-                    bookingList.add(myObj);
-                } catch (ClassNotFoundException e) {
-                    System.out.println(e);
-                } catch (EOFException end) {
-                    EOF = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-        return bookingList;
     }
 
     public static ArrayList<Car> getBookedCars() {

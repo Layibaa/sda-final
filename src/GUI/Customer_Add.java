@@ -1,6 +1,7 @@
 package GUI;
 
 import BackendCode.Customer;
+import BackendCode.CustomerSearcher;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -109,7 +110,7 @@ public class Customer_Add {
                     String contact = Contact_TextField.getText().trim();
 
                     if (Customer.isCNICValid(cnic)) {
-                        Customer customer = Customer.SearchByCNIC(cnic);
+                        Customer customer = CustomerSearcher.SearchByCNIC(cnic);
                         if (customer == null) {
                             if (Customer.isNameValid(name)) {
                                 if (Customer.isContactNoValid(contact)) {
