@@ -1,23 +1,18 @@
 package BackendCode;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
- *
+ * Customer class represents a customer entity.
+ * Violations are annotated with corresponding Violation IDs.
  * @author @AbdullahShahid01
  */
 public class Customer extends Person implements Serializable {
 
-    private int Bill; // increases after every HOUR when a customers has Booked car(s)
+    private int Bill; // V25: Primitive Obsession - Should be encapsulated in a value object.
+
+    private static final String FILE_NAME = "Customer.ser"; // V23: Hard-coded file name moved to a constant.
 
     public Customer() {
         super();
@@ -40,143 +35,95 @@ public class Customer extends Person implements Serializable {
     public String toString() {
         return super.toString() + "Customer{" + "Bill=" + Bill + '}' + "\n";
     }
- public void Add() {
+
+    @Override
+    public void Add() {
         ArrayList<Customer> customers = Customer.View();
         if (customers.isEmpty()) {
             this.ID = 1;
         } else {
-            this.ID = customers.get((customers.size() - 1)).ID + 1; // Auto ID...
+            this.ID = customers.get(customers.size() - 1).ID + 1; // V28: Magic Number - Auto ID logic is hard-coded.
         }
         customers.add(this);
-        File file = new File("Customer.ser");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-        }
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            for (int i = 0; i < customers.size(); i++) {
-                outputStream.writeObject(customers.get(i));
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-        } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
-        }
+        writeCustomersToFile(customers); // V22: Reused file writing logic.
     }
- 
+
+    @Override
     public void Update() {
         ArrayList<Customer> customers = Customer.View();
 
-        // for loop for replacing the new Customer object with old one with same ID
-        for (int i = 0; i < customers.size(); i++) {
+        for (int i = 0; i < customers.size(); i++) { // V27: Data Structure Misuse - Can use a for-each loop.
             if (customers.get(i).ID == ID) {
                 customers.set(i, this);
             }
         }
 
-        // code for writing new Customer record 
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("Customer.ser"));
-            for (int i = 0; i < customers.size(); i++) {
-                outputStream.writeObject(customers.get(i));
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-        } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
-        }
+        writeCustomersToFile(customers); // V22: Duplicate logic reused.
     }
- 
-    public void Remove() {
 
+    @Override
+    public void Remove() {
         ArrayList<Customer> customers = Customer.View();
 
-        // for loop for deleting the required Customer
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).ID == ID) {
-                customers.remove(i);
-            }
-        }
+        customers.removeIf(customer -> customer.ID == ID); // Simplified loop with a lambda.
 
-        // code for writing new Customer record 
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("Customer.ser"));
-            for (int i = 0; i < customers.size(); i++) {
-                outputStream.writeObject(customers.get(i));
+        writeCustomersToFile(customers); // V22: Duplicate logic reused.
+    }
+
+    // Utility method to handle file writing logic (reused in Add, Update, Remove)
+    private void writeCustomersToFile(ArrayList<Customer> customers) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            for (Customer customer : customers) {
+                outputStream.writeObject(customer);
             }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
         } catch (IOException ex) {
-            System.out.println(ex);
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ex) {
-                    System.out.println(ex);
-                }
-            }
+            // V24: Proper exception handling needed (Logging should be used instead of printing)
+            System.err.println("Error writing to file: " + ex.getMessage());
         }
     }
 
+    public static ArrayList<Customer> SearchByName(String name) {
+        ArrayList<Customer> customers = Customer.View();
+        ArrayList<Customer> result = new ArrayList<>();
+        for (Customer customer : customers) { // V27: Data Structure Misuse - Replacing manual for loop.
+            if (customer.Name.equalsIgnoreCase(name)) {
+                result.add(customer);
+            }
+        }
+        return result;
+    }
+
+    public static Customer SearchByCNIC(String CustomerCNIC) {
+        return Customer.View().stream()
+                .filter(customer -> customer.CNIC.equalsIgnoreCase(CustomerCNIC))
+                .findFirst().orElse(null); // V26: Generalized search logic can reduce code duplication.
+    }
+
+    public static Customer SearchByID(int id) {
+        return Customer.View().stream()
+                .filter(customer -> customer.ID == id)
+                .findFirst().orElse(null); // V26: Generalized search logic.
+    }
 
     public static ArrayList<Customer> View() {
-        ArrayList<Customer> CustomerList = new ArrayList<>(0);
-        ObjectInputStream inputStream = null;
-        try {
-// open file for reading
-            inputStream = new ObjectInputStream(new FileInputStream("Customer.ser"));
+        ArrayList<Customer> CustomerList = new ArrayList<>();
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
             boolean EOF = false;
-// Keep reading file until file ends
             while (!EOF) {
                 try {
                     Customer myObj = (Customer) inputStream.readObject();
                     CustomerList.add(myObj);
-                } catch (ClassNotFoundException e) {
-                    System.out.println(e);
                 } catch (EOFException end) {
                     EOF = true;
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Class not found: " + e.getMessage()); // V24: Use proper logging.
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println(e);
+            System.err.println("File not found: " + e.getMessage()); // V24: Proper exception handling.
         } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e);
-            }
+            System.err.println("Error reading file: " + e.getMessage());
         }
         return CustomerList;
     }
-
-
-
 }
